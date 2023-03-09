@@ -1,36 +1,30 @@
-// Описаний в документації
-import SimpleLightbox from 'simplelightbox';
-// Додатковий імпорт стилів
-import 'simplelightbox/dist/simple-lightbox.min.css';
-// import of galleryItems
-import { galleryItems } from './gallery-items';
-
-console.log(galleryItems);
+import { galleryItems } from './gallery-items.js';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 // Change code below this line
+const gallery = document.querySelector('.gallery');
+console.log(galleryItems);
 
-const parentItemsRef = document.body.querySelector('.gallery');
-// console.log('parentItemsRef:', parentItemsRef);
+function render(parentSelector, arrayContent) {
+	const gallaryItem = arrayContent.map(element => {
+		return `
+  <a class="gallery__link" href="${element.original}">
+    <img
+      class="gallery__image"
+      src="${element.preview}"
+      data-source="${element.original}"
+      alt="${element.description}"
+      title="${element.description}"
+    />
+  </a>
+	`;
+	}).join('');
+	parentSelector.innerHTML = gallaryItem;
 
-galleryItemsMarkup(galleryItems, parentItemsRef);
-
-const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-});
-
-function galleryItemsMarkup(arrItems, parentRef) {
-    const itemsMarkup = arrItems
-        .map(({ preview, original, description }) => {
-            return `<div class="gallery__item">
-                <a class="gallery__item" href="${original}">
-                    <img class="gallery__image" src="${preview}" alt="${description}" />
-                </a>
-             </div>`;
-        })
-        .join('');
-
-    return (parentRef.innerHTML = itemsMarkup);
 }
+render(gallery, galleryItems);
 
-console.log(lightbox);
-
+// var змінено на const
+const lightbox = new SimpleLightbox('.gallery a', {
+	captionDelay: 250
+});

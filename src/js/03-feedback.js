@@ -1,40 +1,27 @@
-import { save, load } from '../js/local_storage';
-import throttle from 'lodash.throttle';
+const throttle = require('lodash.throttle');
+let formData = {};
+const form = document.querySelector('.feedback-form');
+form.addEventListener('input', throttle(saveInputValue, 500));
+form.addEventListener('submit', clearStorage);
+function saveInputValue(e) {
+	formData[e.target.name] = e.target.value;
+	localStorage.setItem('feedback-form-state', JSON.stringify(formData));
+}
+getLS()
+function getLS() {
+	if (localStorage.getItem('feedback-form-state')) {
+		formData = JSON.parse(localStorage.getItem('feedback-form-state'));
+		
+		for (let key in formData) {
+			form.elements[key].value = formData[key];
+		}
 
-const formRef = document.querySelector('.feedback-form');
-// console.log('formRef:', formRef);
-const emailRef = document.querySelector('[name="email"]');
-// console.log('emailRef:', emailRef);
-const messageRef = document.querySelector('[name="message"]');
-// console.log('messageRef:', messageRef);
-const LOCALSTORAGE_KEY = 'feedback-form-state';
-
-let feedbackData = {
-    email: '',
-    message: '',
-};
-
-formRef.addEventListener('input', throttle(updateFeedbackData, 500));
-formRef.addEventListener('submit', onFormSubmit);
-
-if (load(LOCALSTORAGE_KEY) !== undefined) {
-    feedbackData = load(LOCALSTORAGE_KEY);
-    //   console.log('feedbackData:', feedbackData);
-    emailRef.value = feedbackData.email;
-    messageRef.value = feedbackData.message;
+	}
 }
 
-function updateFeedbackData(e) {
-    feedbackData[e.target.name] = e.target.value;
-    save(LOCALSTORAGE_KEY, feedbackData);
-    //   console.log(e.target.name, ':', e.target.value);
-}
-
-function onFormSubmit(e) {
-    e.preventDefault();
-
-    console.log(feedbackData);
-
-    formRef.reset();
-    localStorage.clear();
+function clearStorage(e) {
+	e.preventDefault();
+	form.reset();
+	console.log(formData);
+	localStorage.removeItem('feedback-form-state');
 }

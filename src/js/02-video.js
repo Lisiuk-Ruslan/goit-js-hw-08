@@ -1,26 +1,28 @@
-import Vimeo from '@vimeo/player';
-import throttle from 'lodash.throttle';
-
-import { save, load } from '../js/local_storage';
-
+import Player from '@vimeo/player';
+const throttle = require('lodash.throttle');
 const iframe = document.querySelector('iframe');
-const player = new Vimeo(iframe);
-const LOCALSTORAGE_KEY = 'videoplayer-current-time';
+const player = new Player(iframe);
+player.setCurrentTime(localStorage.getItem('videoplayer-current-time')).then(function (seconds) {
+	
+}).catch(function (error) {
+	switch (error.name) {
+		case 'RangeError':
+			
+			break;
 
-player.on(
-    'timeupdate',
-    throttle(function ({ seconds }) {
-        save(LOCALSTORAGE_KEY, seconds);
-        // console.log('sec: ', seconds, ' minute: ', Number(seconds / 60).toFixed(1));
-    }, 1000)
-);
+		default:
+			
+			break;
+	}
+});
+player.on('play', function (data) {
+	
+});
 
-load(LOCALSTORAGE_KEY) === undefined
-    ? player.setCurrentTime(0)
-    : player.setCurrentTime(load(LOCALSTORAGE_KEY));
+player.on('timeupdate', throttle((data) => {
+	localStorage.setItem('videoplayer-current-time', data.seconds);
+	console.log(localStorage.getItem('videoplayer-current-time'));
+	}, 1000));
 
-// if (load(LOCALSTORAGE_KEY) === undefined) {
-//   player.setCurrentTime(0);
-// } else {
-//   player.setCurrentTime(load(LOCALSTORAGE_KEY));
-// }
+
+
