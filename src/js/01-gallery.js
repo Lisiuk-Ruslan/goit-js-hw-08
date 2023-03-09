@@ -6,8 +6,8 @@ const gallery = document.querySelector('.gallery');
 console.log(galleryItems);
 
 function render(parentSelector, arrayContent) {
-	const gallaryItem = arrayContent.map(element => {
-		return `
+  const gallaryItem = arrayContent.map(element => {
+    return `
   <a class="gallery__link" href="${element.original}">
     <img
       class="gallery__image"
@@ -18,13 +18,15 @@ function render(parentSelector, arrayContent) {
     />
   </a>
 	`;
-	}).join('');
-	parentSelector.innerHTML = gallaryItem;
+  }).join('');
+  parentSelector.innerHTML = gallaryItem;
 
 }
 render(gallery, galleryItems);
 
+
+
 // var змінено на const
 const lightbox = new SimpleLightbox('.gallery a', {
-	captionDelay: 250
+  captionDelay: 250
 });
